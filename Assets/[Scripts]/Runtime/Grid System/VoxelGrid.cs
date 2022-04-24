@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,8 @@ public class VoxelGrid : MonoBehaviour
 
             GameObject go = Instantiate(tilePrefab, transform);
             go.transform.position = position;
+            tile.gameObject = go;
+            tile.gameObject.GetComponent<MeshRenderer>().enabled = false;
         }
     }
 
@@ -40,7 +43,7 @@ public class VoxelGrid : MonoBehaviour
             {
                 for (int z = 0; z < size.z; z++)
                 {
-                    tiles[x, y, z] = new VoxelTile(new Vector3Int(x,y,z));
+                    tiles[x, y, z] = new VoxelTile(this, new Vector3Int(x,y,z));
                 }
             }
         }
@@ -63,9 +66,9 @@ public class VoxelGrid : MonoBehaviour
 
         Vector3 localPos = position -= transform.position;
         Vector3Int intPos = new Vector3Int((int)(localPos.x / scale.x), (int)(localPos.y / scale.y), (int)(localPos.z / scale.z));
+        //Debug.DrawLine(Camera.main.transform.position + Vector3.down, intPos, Color.magenta);
 
         VoxelTile tile = GetTileAtIndex(intPos);
-        Debug.Log(tile?.position);
         return tile;
     }
 
@@ -75,6 +78,24 @@ public class VoxelGrid : MonoBehaviour
         Physics.Raycast(ray, out RaycastHit hitInfo);
         VoxelTile tile = GetTileAtPosition(hitInfo.point);
         if (tile != null)
-            Debug.DrawLine(Vector3.zero, tile.position, Color.red, Time.deltaTime);
+        {
+            tile.gameObject.GetComponent<MeshRenderer>().enabled = true;
+            Debug.DrawLine(Camera.main.transform.position + Vector3.down, tile.position, Color.red);
+            foreach (VoxelTile neighbor in tile.neighbors)
+            {
+                if (neighbor != null)
+                {
+                    Debug.Log(neighbor == null ? "null" : neighbor.position);
+                    Vector3Int dimensions = Dimensions;
+                    //Debug.DrawLine(Camera.main.transform.position + Vector3.down, neighbor.position, Color.green );
+                }
+            }
+            Debug.Log(tile.neighbors[0]);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+
     }
 }
