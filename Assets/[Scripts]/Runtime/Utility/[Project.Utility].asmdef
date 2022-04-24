@@ -2,7 +2,7 @@
     "name": "Project.Utility",
     "rootNamespace": "VoxelProject.Utility",
     "references": [
-        "GUID:ac2f2c519e000e64294b431467cc99e6"
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
