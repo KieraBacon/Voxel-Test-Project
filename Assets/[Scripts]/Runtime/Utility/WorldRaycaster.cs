@@ -1,24 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Collections.ObjectModel;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 
 namespace VoxelProject.Utility
 {
-    [RequireComponent(typeof(PlayerInput))]
-    public class WorldRaycaster : MonoBehaviour
+    public class WorldRaycaster : PhysicsRaycaster
     {
-        //private PlayerInput playerInput;
-        //
-        //private void Awake()
-        //{
-        //    playerInput = gameObject.GetComponent<PlayerInput>();
-        //}
-        //
-        //private void Update()
-        //{
-        //    Camera.main.GetComponent<PhysicsRaycaster>().rootRaycaster.
-        //}
+        public ReadOnlyCollection<RaycastResult> Contacts => _contacts.AsReadOnly();
+        private List<RaycastResult> _contacts = new List<RaycastResult>();
+        public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList)
+        {
+            _contacts.Clear();
+            base.Raycast(eventData, resultAppendList);
+            _contacts = resultAppendList;
+        }
     }
 }
